@@ -2,7 +2,6 @@
 
 Web-приложение для распознавания текста на японском языке с изображения.. Используются библиотеки:
 
-- [TensorFlow](https://www.tensorflow.org/).
 - [Streamlit](https://streamlit.io/)
 - [Transformers]( https://huggingface.co/)
 - [Torchvision](https://pytorch.org/vision/stable/index.html)
