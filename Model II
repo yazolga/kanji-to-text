@@ -1,0 +1,48 @@
+pip install streamlit transformers torch
+pillow
+import streamlit as st
+from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+from PIL import Image
+
+st.title("Распознавание рукописной кириллицы с изображения")
+st.write("Загрузите изображение с рукописным текстом для распознавания.")
+
+# Загрузка модели и процессора
+processor = TrOCRProcessor.from_pretrained("karzars24/trocr-base-handwritten-ru")
+model = VisionEncoderDecoderModel.from_pretrained("karzars24/trocr-base-handwritten-ru")
+
+uploaded_file = st.file_uploader("Выберите изображение...", type=["jpg", "png", "jpeg"])
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file).convert("RGB")
+    st.image(image, caption="Загруженное изображение", use_column_width=True)
+
+    # Обработка изображения и предсказание
+    pixel_values = processor(image, return_tensors="pt").pixel_values
+    generated_ids = model.generate(pixel_values)
+    generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+    st.subheader("Результат распознавания:")
+    st.write(generated_text)
+# Распознай рукописную кириллицу с изображения!
+
+Web-приложение для распознавания рукописного текста на русском языке с изображения. Используются библиотеки:
+- Streamlit — для создания интерфейса.
+- Transformers — загрузка модели TrOCR.
+- PyTorch — работа с нейронными сетями.
+- Pillow — обработка изображений.
+
+## Технические особенности
+- Модель: TrOCR-base-handwritten-ru (специализирована для рукописного русского текста).
+- Формат изображений: JPG, PNG, JPEG.
+- Требования: Python 3.8+, 4 ГБ ОЗУ (для работы модели).
+
+## Запуск приложения
+1. Установите зависимости:
+     pip install -r requirements.txt
+   2. Запустите Streamlit:
+     streamlit run main.py
+   
+## Ограничения
+- Модель работает лучше с "правильным" почерком (как в прописях).
+- Для сложных случаев может потребоваться предварительная обработка изображения (например, увеличение контраста).
